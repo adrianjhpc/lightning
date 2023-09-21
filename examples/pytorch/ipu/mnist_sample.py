@@ -27,7 +27,7 @@ class LitClassifier(LightningModule):
         self.l1 = torch.nn.Linear(28 * 28, self.hparams.hidden_dim)
         self.l2 = torch.nn.Linear(self.hparams.hidden_dim, 10)
 
-        self.val_outptus = []
+        self.val_outputs = []
         self.test_outputs = []
 
     def forward(self, x):
@@ -63,8 +63,8 @@ class LitClassifier(LightningModule):
     def on_validation_epoch_end(self) -> None:
         # since the training step/validation step and test step are run on the IPU device
         # we must log the average loss outside the step functions.
-        self.log("val_acc", torch.stack(self.val_outptus).mean(), prog_bar=True)
-        self.val_outptus.clear()
+        self.log("val_acc", torch.stack(self.val_outputs).mean(), prog_bar=True)
+        self.val_outputs.clear()
 
     def on_test_epoch_end(self) -> None:
         self.log("test_acc", torch.stack(self.test_outputs).mean())
